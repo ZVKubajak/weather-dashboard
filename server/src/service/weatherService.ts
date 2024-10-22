@@ -17,14 +17,14 @@ interface WeatherItem {
   dt_txt: string;
 }
 
-// TODO: Define an interface for the Coordinates object
+// * TODO: Define an interface for the Coordinates object
 
 interface Coordinates {
   lat: number;
   lon: number;
 }
 
-// TODO: Define a class for the Weather object
+// * TODO: Define a class for the Weather object
 
 class Weather {
   city: string;
@@ -54,14 +54,14 @@ class Weather {
   }
 }
 
-// TODO: Complete the WeatherService class
+// * TODO: Complete the WeatherService class
 class WeatherService {
-  // TODO: Define the baseURL, API key, and city name properties
+  // * TODO: Define the baseURL, API key, and city name properties
   baseURL: string = process.env.BASE_URL as string;
   APIkey: string = process.env.API_KEY as string;
   cityName: string = "";
 
-  // TODO: Create fetchLocationData method
+  // * TODO: Create fetchLocationData method
   private async fetchLocationData(query: string): Promise<Coordinates> {
     const geocodeURL = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.APIkey}`;
 
@@ -87,7 +87,7 @@ class WeatherService {
     }
   }
 
-  // TODO: Create fetchWeatherData method
+  // * TODO: Create fetchWeatherData method
   private async fetchWeatherData(
     coordinates: Coordinates,
     city: string
@@ -133,7 +133,7 @@ class WeatherService {
     }
   }
 
-  // TODO: Complete buildForecastArray method
+  // * TODO: Complete buildForecastArray method
   private buildForecastArray(weatherData: Weather[]): Weather[] {
     return weatherData.map((weather) => {
       return new Weather(
@@ -148,7 +148,7 @@ class WeatherService {
     });
   }
 
-  // TODO: Complete getWeatherForCity method
+  // * TODO: Complete getWeatherForCity method
   async getWeatherForCity(
     city: string
   ): Promise<{ city: string; forecast: Weather[] }> {
