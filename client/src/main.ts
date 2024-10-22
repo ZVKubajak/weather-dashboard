@@ -46,9 +46,10 @@ const fetchWeather = async (cityName: string) => {
   const weatherData = await response.json();
 
   console.log('weatherData: ', weatherData);
+  console.log("currentWeather: ", weatherData.data[0]);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(weatherData.data[0]);
+  renderForecast(weatherData.data.slice(1, 6));
 };
 
 const fetchSearchHistory = async () => {

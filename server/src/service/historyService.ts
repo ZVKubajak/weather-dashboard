@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import path from "path";
+// import path from "path";
 
 // * TODO: Define a City class with name and id properties
 
@@ -15,16 +15,16 @@ class City {
 
 // * TODO: Complete the HistoryService class
 class HistoryService {
-  private filePath: string;
+  // private filePath: string;
 
-  constructor() {
-    this.filePath = path.join(__dirname, "searchHistory.json");
-  }
+  // constructor() {
+  //   this.filePath = path.join(__dirname, "searchHistory.json");
+  // }
 
   // * TODO: Define a read method that reads from the searchHistory.json file
   private async read(): Promise<City[]> {
     try {
-      const data = await fs.readFile(this.filePath, "utf-8");
+      const data = await fs.readFile("db/db.json", "utf-8");
       return JSON.parse(data);
     } catch (error) {
       console.error("Error reading the file:", error);
@@ -36,7 +36,7 @@ class HistoryService {
   private async write(cities: City[]): Promise<void> {
     try {
       const data = JSON.stringify(cities);
-      await fs.writeFile(this.filePath, data);
+      await fs.writeFile("db/db.json", data);
     } catch (error) {
       console.error("Error writing to the file:", error);
     }

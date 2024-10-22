@@ -57,13 +57,14 @@ class Weather {
 // * TODO: Complete the WeatherService class
 class WeatherService {
   // * TODO: Define the baseURL, API key, and city name properties
-  baseURL: string = process.env.BASE_URL as string;
+  baseURL: string = process.env.API_BASE_URL as string;
   APIkey: string = process.env.API_KEY as string;
   cityName: string = "";
 
   // * TODO: Create fetchLocationData method
   private async fetchLocationData(query: string): Promise<Coordinates> {
     const geocodeURL = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.APIkey}`;
+    console.log(geocodeURL);
 
     try {
       const response = await fetch(geocodeURL);
