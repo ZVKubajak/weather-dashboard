@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 // Interface for item in fetchWeatherData method.
@@ -35,14 +35,14 @@ class Weather {
   windSpeed: number;
   humidity: number;
 
-  constructor (
+  constructor(
     city: string,
     date: string,
     icon: string,
     iconDescription: string,
     tempF: number,
     windSpeed: number,
-    humidity: number,
+    humidity: number
   ) {
     this.city = city;
     this.date = date;
@@ -83,30 +83,37 @@ class WeatherService {
       return { lat, lon };
     } catch (error) {
       console.error("Error fetching location data:", error);
-      throw error;      
+      throw error;
     }
   }
 
   // TODO: Create fetchWeatherData method
-  private async fetchWeatherData(coordinates: Coordinates, city: string): Promise<Weather[]> {
+  private async fetchWeatherData(
+    coordinates: Coordinates,
+    city: string
+  ): Promise<Weather[]> {
     const weatherURL = `${this.baseURL}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.APIkey}`;
 
     try {
       const response = await fetch(weatherURL);
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch weather data with coordinates: (${coordinates.lat}, ${coordinates.lon}).`)
+        throw new Error(
+          `Failed to fetch weather data with coordinates: (${coordinates.lat}, ${coordinates.lon}).`
+        );
       }
 
       const data = await response.json();
 
       if (data.list.length === 0) {
-        throw new Error(`No weather data found with coordinates: (${coordinates.lat}, ${coordinates.lon}).`)
+        throw new Error(
+          `No weather data found with coordinates: (${coordinates.lat}, ${coordinates.lon}).`
+        );
       }
 
       const weatherData: Weather[] = data.list.map((item: WeatherItem) => {
         const tempK = item.main.temp; // Temp is in Kelvin from API
-        const tempF = (tempK - 273.15) * 9/5 + 32;
+        const tempF = ((tempK - 273.15) * 9) / 5 + 32;
 
         return new Weather(
           city,
@@ -118,9 +125,8 @@ class WeatherService {
           item.main.humidity
         );
       });
-  
-      return this.buildForecastArray(weatherData);
 
+      return this.buildForecastArray(weatherData);
     } catch (error) {
       console.error("Error fetching weather data:", error);
       throw error;
@@ -129,7 +135,7 @@ class WeatherService {
 
   // TODO: Complete buildForecastArray method
   private buildForecastArray(weatherData: Weather[]): Weather[] {
-    return weatherData.map(weather => {
+    return weatherData.map((weather) => {
       return new Weather(
         weather.city,
         weather.date,
@@ -137,13 +143,15 @@ class WeatherService {
         weather.iconDescription,
         weather.tempF,
         weather.windSpeed,
-        weather.humidity,
+        weather.humidity
       );
     });
   }
 
   // TODO: Complete getWeatherForCity method
-  async getWeatherForCity(city: string): Promise<{ city: string; forecast: Weather[] }> {
+  async getWeatherForCity(
+    city: string
+  ): Promise<{ city: string; forecast: Weather[] }> {
     const coordinates = await this.fetchLocationData(city);
     const forecast = await this.fetchWeatherData(coordinates, city);
     return { city, forecast };
