@@ -119,7 +119,7 @@ class WeatherService {
         );
       });
   
-      return weatherData;
+      return this.buildForecastArray(weatherData);
 
     } catch (error) {
       console.error("Error fetching weather data:", error);
@@ -129,12 +129,27 @@ class WeatherService {
 
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) {}
+
   // TODO: Complete buildForecastArray method
-  // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
+  private buildForecastArray(weatherData: Weather[]): Weather[] {
+    return weatherData.map(weather => {
+      return new Weather(
+        weather.city,
+        weather.date,
+        weather.icon,
+        weather.iconDescription,
+        weather.tempF,
+        weather.windSpeed,
+        weather.humidity,
+      );
+    });
+  }
+
   // TODO: Complete getWeatherForCity method
-  async getWeatherForCity(city: string): Promise<Weather[]> {
+  async getWeatherForCity(city: string): Promise<{ city: string; forecast: Weather[] }> {
     const coordinates = await this.fetchLocationData(city);
-    return this.fetchWeatherData(coordinates, city);
+    const forecast = await this.fetchWeatherData(coordinates, city);
+    return { city, forecast };
   }
 }
 
