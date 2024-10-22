@@ -44,7 +44,7 @@ class WeatherService {
   baseURL: string = process.env.BASE_URL as string;
   APIkey: string = process.env.API_KEY as string;
   cityName: string = "";
-  
+
   // TODO: Create fetchLocationData method
   private async fetchLocationData(query: string): Promise<Coordinates> {
     const geocodeURL = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.APIkey}`;
@@ -116,7 +116,10 @@ class WeatherService {
   // TODO: Complete buildForecastArray method
   // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
   // TODO: Complete getWeatherForCity method
-  // async getWeatherForCity(city: string) {}
+  async getWeatherForCity(city: string): Promise<Weather> {
+    const coordinates = await this.fetchLocationData(city);
+    return this.fetchWeatherData(coordinates, city);
+  }
 }
 
 export default new WeatherService();
