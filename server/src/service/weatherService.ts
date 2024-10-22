@@ -44,6 +44,7 @@ class WeatherService {
   baseURL: string = process.env.BASE_URL as string;
   APIkey: string = process.env.API_KEY as string;
   cityName: string = "";
+  
   // TODO: Create fetchLocationData method
   private async fetchLocationData(query: string): Promise<Coordinates> {
     const geocodeURL = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.APIkey}`;
@@ -58,7 +59,7 @@ class WeatherService {
       const data = await response.json();
 
       if (data.length === 0) {
-        throw new Error(`No location data found for ${query}`);
+        throw new Error(`No location data found for ${query}.`);
       }
 
       const { lat, lon } = data[0];
@@ -69,8 +70,47 @@ class WeatherService {
       throw error;      
     }
   }
+
   // TODO: Create fetchWeatherData method
-  // private async fetchWeatherData(coordinates: Coordinates) {}
+  private async fetchWeatherData(coordinates: Coordinates, city: string): Promise<Weather> {
+    const weatherURL = `${this.baseURL}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.APIkey}`;
+
+    try {
+      const response = await fetch(weatherURL);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch weather data with coordinates: (${coordinates.lat}, ${coordinates.lon}).`)
+      }
+
+      const data = await response.json();
+
+      if (data.list.length === 0) {
+        throw new Error(`No weather data found with coordinates: (${coordinates.lat}, ${coordinates.lon}).`)
+      }
+
+      const weatherData: Weather = data.list.map((item: any) => {
+        const tempK = item.main.temp; // Temp is in Kelvin from API
+        const tempF = (tempK - 273.15) * 9/5 + 32;
+
+        return new Weather(
+          city,
+          item.dt_txt,
+          item.weather[0].icon,
+          item.weather[0].description,
+          tempF,
+          item.wind.speed,
+          item.main.humidity
+        );
+      });
+  
+      return weatherData;
+
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+      throw error;
+    }
+  }
+
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) {}
   // TODO: Complete buildForecastArray method
