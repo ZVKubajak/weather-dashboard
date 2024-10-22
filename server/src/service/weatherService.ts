@@ -41,8 +41,34 @@ class Weather {
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
+  baseURL: string = process.env.BASE_URL as string;
+  APIkey: string = process.env.API_KEY as string;
+  cityName: string = "";
   // TODO: Create fetchLocationData method
-  // private async fetchLocationData(query: string) {}
+  private async fetchLocationData(query: string): Promise<Coordinates> {
+    const geocodeURL = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.APIkey}`;
+
+    try {
+      const response = await fetch(geocodeURL);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch location data for ${query}`);
+      }
+
+      const data = await response.json();
+
+      if (data.length === 0) {
+        throw new Error(`No location data found for ${query}`);
+      }
+
+      const { lat, lon } = data[0];
+
+      return { lat, lon };
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      throw error;      
+    }
+  }
   // TODO: Create destructureLocationData method
   // private destructureLocationData(locationData: Coordinates): Coordinates {}
   // TODO: Create buildGeocodeQuery method
