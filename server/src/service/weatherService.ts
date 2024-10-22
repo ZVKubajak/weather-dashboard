@@ -127,9 +127,6 @@ class WeatherService {
     }
   }
 
-  // TODO: Build parseCurrentWeather method
-  // private parseCurrentWeather(response: any) {}
-
   // TODO: Complete buildForecastArray method
   private buildForecastArray(weatherData: Weather[]): Weather[] {
     return weatherData.map(weather => {
